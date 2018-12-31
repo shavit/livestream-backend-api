@@ -1,7 +1,30 @@
 ---
 
-# TODO: Install dependencies
-# ['epel-release','gcc','gcc-c++','automake','make','perl','perl-devel','perl-ExtUtils-Embed','libxslt','libxslt-devel','libxml2','libxml2-devel','gd gd-devel','GeoIP','GeoIP-devel']
+- name: Install dependencies
+  yum:
+    name: epel-release,libtool,gcc,gcc-c++,automake,make,perl,perl-devel,perl-core,perl-ExtUtils-Embed,libxslt,libxslt-devel,libxml2,libxml2-devel,gd,gd-devel,GeoIP,GeoIP-devel,zlib,zlib-devel,pcre,pcre-devel
+    state: present
+
+- name: Download openssl
+  get_url:
+    url: https://www.openssl.org/source/openssl-1.0.2q.tar.gz
+    dest: /tmp/openssl-1.0.2q.tar.gz
+
+- name: Extract openssl
+  unarchive:
+    src: /tmp/openssl-1.0.2q.tar.gz
+    dest: /tmp/
+    copy: no
+
+- name: Move openssl to the /etc/ directory
+  command: mv /tmp/openssl-1.0.2q/ /usr/local
+
+- name: Install openssl
+  command: chdir=/usr/local/openssl-1.0.2q/ {{ item }}
+  with_items:
+    - ./config
+    - /usr/bin/make
+    - /usr/bin/make install
 
 - name: Download nginx
   get_url:
@@ -18,7 +41,7 @@
   tags:
     - nginx
 
-- name: Install nginx in the /etc/nginx direcory 1
+- name: Install nginx in the /etc/nginx directory
   command: mv /tmp/nginx-1.9.9/ /etc
   tags:
     - nginx
@@ -46,16 +69,15 @@
 - name: Move nginx rtmp module to the modules directory
   command: mv /tmp/nginx-rtmp-module-master /etc/nginx-1.9.9/modules/nginx-rtmp-module-master
 
-# TODO: Complete this after the dependencies were installed
-# - name: Configure nginx
-#   command: chdir=/etc/nginx-1.9.9/ {{ item }}
-#   with_items:
-#     - ./configure --with-http_ssl_module --add-module=/etc/nginx-1.9.9/modules/nginx-rtmp-module-master
-#     - /usr/bin/make
-#     - /usr/bin/make install
-#   tags:
-#     - nginx
-#     - config
+- name: Configure nginx
+  command: chdir=/etc/nginx-1.9.9/ {{ item }}
+  with_items:
+    - ./configure --with-http_ssl_module --with-openssl=/usr/local/openssl-1.0.2q --with-ipv6 --sbin-path=/usr/local/sbin/nginx --pid-path=/var/run/nginx/nginx.pid --add-module=/etc/nginx-1.9.9/modules/nginx-rtmp-module-master
+    - /usr/bin/make
+    - /usr/bin/make install
+  tags:
+    - nginx
+    - config
 
 - name: Create nginx default pages
   template:
