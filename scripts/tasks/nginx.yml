@@ -43,19 +43,19 @@
   tags:
     - nginx
 
-# TODO: Complete this after the dependencies were installed
-# - name: Install nginx rtmp module in the /etc/nginx-1.9.9/modules directory
-#   command: mv /tmp/nginx-rtmp-module-master /etc/nginx-1.9.9/modules/nginx-rtmp-module-master
+- name: Move nginx rtmp module to the modules directory
+  command: mv /tmp/nginx-rtmp-module-master /etc/nginx-1.9.9/modules/nginx-rtmp-module-master
 
-- name: Configure nginx
-  command: chdir=/etc/nginx-1.9.9/ {{ item }}
-  with_items:
-    - ./configure --with-http_ssl_module --add-module=/etc/nginx-1.9.9/modules/nginx-rtmp-module-master
-    - /usr/bin/make
-    - /usr/bin/make install
-  tags:
-    - nginx
-    - config
+# TODO: Complete this after the dependencies were installed
+# - name: Configure nginx
+#   command: chdir=/etc/nginx-1.9.9/ {{ item }}
+#   with_items:
+#     - ./configure --with-http_ssl_module --add-module=/etc/nginx-1.9.9/modules/nginx-rtmp-module-master
+#     - /usr/bin/make
+#     - /usr/bin/make install
+#   tags:
+#     - nginx
+#     - config
 
 - name: Create nginx default pages
   template:
