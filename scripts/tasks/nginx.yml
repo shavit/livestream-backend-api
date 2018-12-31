@@ -91,6 +91,14 @@
     - nginx
     - html
 
+# TODO: Copy the nginx configuration files
+
+# TODO: Create a service
+
+# TODO: Enable the service
+
+# TODO: Start the service
+
 # TODO: Complete this after the dependencies were installed
 # - name: Start nginx
 #   service:

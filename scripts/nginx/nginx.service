@@ -1,0 +1,13 @@
+[Unit]
+Description=Nginx HTTP and RTMP server
+
+[Service]
+Type=forking
+PIDFile=/var/run/nginx/nginx.pid
+ExecStartPre=/usr/local/sbin/nginx -t -c /etc/nginx-1.9.9/conf/nginx.conf
+ExecStart=/usr/local/sbin/nginx -c /etc/nginx-1.9.9/conf/nginx.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecTop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
