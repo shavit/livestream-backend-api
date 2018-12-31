@@ -1,25 +1,66 @@
 ---
 
-- name: Install nginx
-  yum:
-    name: nginx
-    state: installed
-    update_cache: true
+# TODO: Install dependencies
+# ['epel-release','gcc','gcc-c++','automake','make','perl','perl-devel','perl-ExtUtils-Embed','libxslt','libxslt-devel','libxml2','libxml2-devel','gd gd-devel','GeoIP','GeoIP-devel']
+
+- name: Download nginx
+  get_url:
+    url: http://nginx.org/download/nginx-1.9.9.tar.gz
+    dest: /tmp/nginx-1.9.9.tar.gz
   tags:
     - nginx
 
+- name: Extract nginx
+  unarchive:
+    src: /tmp/nginx-1.9.9.tar.gz
+    dest: /tmp/
+    copy: no
+  tags:
+    - nginx
+
+- name: Install nginx in the /etc/nginx direcory 1
+  command: mv /tmp/nginx-1.9.9/ /etc
+  tags:
+    - nginx
+
+- name: Download nginx rtmp module
+  get_url:
+    url: https://github.com/arut/nginx-rtmp-module/archive/master.tar.gz
+    dest: /tmp/nginx-rtmp.tar.gz
+  tags:
+    - nginx
+
+- name: Create directory for the rtmp module
+  file:
+    path: /etc/nginx-1.9.9/modules
+    state: directory
+
+- name: Extract nginx rtmp module
+  unarchive:
+    src: /tmp/nginx-rtmp.tar.gz
+    dest: /tmp/
+    copy: no
+  tags:
+    - nginx
+
+# TODO: Complete this after the dependencies were installed
+# - name: Install nginx rtmp module in the /etc/nginx-1.9.9/modules directory
+#   command: mv /tmp/nginx-rtmp-module-master /etc/nginx-1.9.9/modules/nginx-rtmp-module-master
+
 - name: Configure nginx
-  template:
-    src: scripts/nginx/nginx.conf
-    dest: /etc/nginx/nginx.conf
+  command: chdir=/etc/nginx-1.9.9/ {{ item }}
+  with_items:
+    - ./configure --with-http_ssl_module --add-module=/etc/nginx-1.9.9/modules/nginx-rtmp-module-master
+    - /usr/bin/make
+    - /usr/bin/make install
   tags:
     - nginx
     - config
 
 - name: Create nginx default pages
   template:
-    src: scripts/nginx/{{ item }}
-    dest: /usr/share/nginx/html/{{ item }}
+    src: nginx/{{ item }}
+    dest: /etc/nginx-1.9.9/html/{{ item }}
   with_items:
     - 'index.html'
     - '404.html'
@@ -28,12 +69,13 @@
     - nginx
     - html
 
-- name: Start nginx
-  service:
-    name: nginx
-    state: started
-  tags:
-    - nginx
+# TODO: Complete this after the dependencies were installed
+# - name: Start nginx
+#   service:
+#     name: nginx
+#     state: started
+#   tags:
+#     - nginx
 
 - name: Ensure firewall is running
   firewalld:
@@ -67,5 +109,10 @@
     port: 1935/tcp
     permanent: true
     state: enabled
+  tags:
+    - firewall
+
+- name: Reload firewall
+  command: firewall-cmd --reload
   tags:
     - firewall
