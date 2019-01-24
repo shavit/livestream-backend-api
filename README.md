@@ -2,9 +2,11 @@
 
 > Self hosted video chat server and API
 
+Real-time authorization for gamers and webcam streamers.
+
 ## Before You Start
 
-Add the server address to the `inventory` file
+Add the server host address to the `inventory` file
 
 ```
 cat <<EOF >> inventory
