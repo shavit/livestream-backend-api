@@ -4,6 +4,8 @@ defmodule Livestream do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    :ets.new(:livestream_state, [:public, :named_table])
+
     children = [
       Plug.Cowboy.child_spec(scheme: :http, plug: Livestream.Router, options: [port: Application.get_env(:livestream, :port)])
     ]
