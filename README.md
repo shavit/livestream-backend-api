@@ -1,22 +1,24 @@
-# Video Chat
+# Livestream
 
-> Self hosted video chat server and API
+Access control and API
 
-Real-time authorization for gamers and webcam streamers.
+## Prerequisites
 
-## Before You Start
+Nginx installed with the RMTP module.
 
-Add the server host address to the `inventory` file
+## Installation
 
+If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+by adding `livestream` to your list of dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:livestream, "~> 0.1.0"}
+  ]
+end
 ```
-cat <<EOF >> inventory
-[api]
-<SERVER_ADDRESS> ansible_connection=ssh ansible_port=22
-EOF
-```
 
-# Installation
-
-```
-make install_server
-```
+Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
+and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
+be found at [https://hexdocs.pm/livestream](https://hexdocs.pm/livestream).
