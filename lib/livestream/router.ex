@@ -4,6 +4,10 @@ defmodule Livestream.Router do
   plug :match
   plug :dispatch
 
+  get "/rooms" do
+    send_resp(conn, 200, "ok")
+  end
+
   post "/on_publish", do: on_publish(conn)
   def on_publish(conn) do
     case conn do
