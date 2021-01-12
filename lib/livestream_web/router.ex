@@ -23,12 +23,19 @@ defmodule LivestreamWeb.Router do
   scope "/api", LivestreamWeb do
     pipe_through :api
 
+    get "/rooms", RoomController, :rooms
+  end
+
+  scope "/stream", LivestreamWeb do
+    pipe_through :api
+
     post "/on_publish", RoomController, :on_publish
     post "/on_publish_done", RoomController, :on_publish_done
     post "/on_play", RoomController, :on_play
     post "/on_play_done", RoomController, :on_play_done
-
-    get "/rooms", RoomController, :rooms
+    post "/on_update", RoomController, :on_play_done
+    post "/on_record_done", RoomController, :on_play_done
+    post "/on_done", RoomController, :on_play_done
   end
 
   # Enables LiveDashboard only for development
