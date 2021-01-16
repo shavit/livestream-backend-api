@@ -5,14 +5,27 @@ defmodule Livestream.Room do
   use GenServer
 
   @doc false
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts)
   end
 
   @doc false
-  def init(_opts) do
-    #:ets.new(:livestream_state, [:public, :named_table])
+  def init(opts) do
+    state = %{
+      id: Keyword.get(opts, :id),
+      owner: Keyword.get(opts, :owner)
+    }
 
-    {:ok, nil}
+    {:ok, state}
+  end
+
+  def handle_call(:describe, _from, state) do
+    desc = %{
+      id: state.id,
+      owner: state.owner,
+      users: []
+    }
+
+    {:reply, desc, state}
   end
 end

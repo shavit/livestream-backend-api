@@ -1,7 +1,7 @@
 defmodule LivestreamWeb.RoomController do
   use LivestreamWeb, :controller
   require Logger
-  alias Livestream.Repo
+  alias Livestream.RoomSupervisor, as: Rooms
 
   def index(conn, params) do
     render(conn, "index.json", params)
@@ -56,7 +56,7 @@ defmodule LivestreamWeb.RoomController do
   end
 
   def rooms(conn, params) do
-    rooms = Repo.all()
+    rooms = Rooms.rooms()
     render(conn, "rooms.json", rooms: rooms)
   end
 end
