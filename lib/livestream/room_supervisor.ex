@@ -63,4 +63,8 @@ defmodule Livestream.RoomSupervisor do
   defp find_room(room_owner) do
     rooms |> Enum.filter(fn %{owner: id} -> id == room_owner end) |> List.first()
   end
+
+  defp room_by_id(room_id) do
+    rooms |> Enum.filter(fn %{id: id} -> id == room_id end) |> List.first()
+  end
 end
