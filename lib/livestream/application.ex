@@ -2,6 +2,7 @@ defmodule Livestream.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
+  alias Livestream.Repo
   alias Livestream.RoomSupervisor
   use Application
 
@@ -16,7 +17,8 @@ defmodule Livestream.Application do
       # Start a worker by calling: Livestream.Worker.start_link(arg)
       # {Livestream.Worker, arg}
 
-      RoomSupervisor
+      RoomSupervisor,
+      Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

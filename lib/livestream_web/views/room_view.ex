@@ -5,7 +5,7 @@ defmodule LivestreamWeb.RoomView do
     %{data: []}
   end
 
-  def render("rooms.json", _args) do
-    %{rooms: []}
+  def render("rooms.json", %{rooms: rooms}) do
+    %{rooms: rooms}
   end
 end
